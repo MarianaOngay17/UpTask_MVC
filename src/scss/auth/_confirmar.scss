@@ -2,19 +2,16 @@
 @use 'base/mixins' as m;
 @use 'sass:color';
 
-.login{
+.confirmar{
     margin-top: 5rem;
     .uptask{
-       @include m.textoDegradado(v.$cyan);
-    }
-
-    input[type="submit"]{
-        @include m.boton(v.$cyan, v.$blanco);
+       @include m.textoDegradado(v.$indigo);
     }
 
     .acciones {
+        justify-content: center;
         a {
-            color: v.$cyan;
+            color: v.$indigo;
         }
     }
 }
