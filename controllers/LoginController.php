@@ -76,25 +76,90 @@ class LoginController {
     }
 
     public static function olvide(Router $router){
+        $alertas = [];
 
         if($_SERVER['REQUEST_METHOD'] === 'POST'){
+            $usuario = new Usuario($_POST);
+            $alertas = $usuario->validarEmail();
 
+            if(empty($alertas)){
+                //buscar usuario
+                $usuario = Usuario::where('email', $usuario->email);
+                
+                if($usuario && $usuario->confirmado){
+      
+                    //generar nuevo token
+                    $usuario->crearToken();
+                    unset($usuario->password2);
+
+                    //actualizar usuario
+                    $usuario->guardar();
+
+                    //enviar email
+                    $email = new Email($usuario->email, $usuario->nombre, $usuario->token);
+                    $email->enviarInstrucciones();
+                    //alerta
+                    Usuario::setAlerta('exito', 'Hemos enviado las instrucciones a tu email');
+
+                }else{
+                    Usuario::setAlerta('error', 'El usuario no existe o no está confirmado');
+                }
+            
+            }
+      
         }
 
+        $alertas = Usuario::getAlertas();
+
         $router->render('auth/olvide', [
-            'titulo' => 'Olvide mi Password'
+            'titulo' => 'Olvide mi Password',
+            'alertas' => $alertas
         ]);
 
     }
 
     public static function reestablecer(Router $router){
 
-        if($_SERVER['REQUEST_METHOD'] === 'POST'){
+        $token = s($_GET['token']);
+        $mostrar = true;
+        if(!$token) header('Location: /');
 
+        //identificar usuario con este token
+        $usuario = Usuario::where('token', $token);
+
+        if(empty($usuario)){
+            Usuario::setAlerta('error', 'Token no válido');
+            $mostrar = false;
+        }
+
+        $alertas = Usuario::getAlertas();
+
+        if($_SERVER['REQUEST_METHOD'] === 'POST'){
+            //añadir el nuevo password
+
+            $usuario->sincronizar($_POST);
+            $alertas = $usuario->validarPassword();
+
+            if(empty($alertas)){
+                //eliminar password2 y token
+                unset($usuario->password2);
+                $usuario->token = null;
+
+                //hashear el nuevo password
+                $usuario->hashPassword();
+
+                //guardar el usuario
+                $resultado = $usuario->guardar();
+                if($resultado){
+                    header('Location: /');
+                }
+            }
         }
 
         $router->render('auth/reestablecer', [
-            'titulo' => 'Reestablecer Password'
+            'titulo' => 'Reestablecer Password',
+            'alertas' => $alertas,
+            'mostrar' => $mostrar
         ]);
 
     }
