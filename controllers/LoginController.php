@@ -9,13 +9,49 @@ use Model\Usuario;
 class LoginController {
 
     public static function login(Router $router){
+        $alertas = [];
 
         if($_SERVER['REQUEST_METHOD'] === 'POST'){
+            $auth = new Usuario($_POST);
 
+            $alertas = $auth->validarLogin();
+
+            if(empty($alertas)){
+
+                $usuario = Usuario::where('email', $auth->email);
+
+                if($usuario && $usuario->confirmado){
+
+                    //verificar el password
+                    if(password_verify($_POST['password'], $usuario->password)){
+                        //autenticar el usuario
+                        session_start();
+
+                        $_SESSION['id'] = $usuario->id;
+                        $_SESSION['nombre'] = $usuario->nombre;
+                        $_SESSION['email'] = $usuario->email;
+                        $_SESSION['login'] = true;
+
+                        //redireccionar
+                        header('Location: /proyectos');
+
+                    }else{
+                        Usuario::setAlerta('error', 'Password Incorrecto');
+                    }
+
+                }else{
+                   Usuario::setAlerta('error', 'El usuario no existe o no esta confirmado');
+                }
+            }
+
+            //debuguear($auth);
         }
 
+        $alertas = Usuario::getAlertas();
+
         $router->render('auth/login', [
-            'titulo' => 'Iniciar Sesión'
+            'titulo' => 'Iniciar Sesión',
+            'alertas' => $alertas
         ]);
 
     }
