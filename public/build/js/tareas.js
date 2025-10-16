@@ -1,0 +1,1 @@
+document.querySelector("#gregar-tarea").addEventListener("click",function(){const e=document.createElement("div");e.classList.add("modal"),e.innerHTML='\n            <form class="formulario nueva-tarea">\n                <legend>Añade una nueva tarea</legend>\n            \n            </form>\n        '});
