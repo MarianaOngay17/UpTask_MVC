@@ -31,6 +31,11 @@
             display: block;
         }
 
+        input[type="text"] {
+            border: 1px solid v.$gris;
+            border-radius: .5rem;
+        }
+
         .opciones{
             display: flex;
             justify-content: space-between;
@@ -53,7 +58,7 @@
 
         &.cerrar {
             transform: translateY(-200%);
-            opacity: 0;
+            opacity: 1;
         }
     }
 
