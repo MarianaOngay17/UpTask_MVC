@@ -8,6 +8,12 @@
                 id="gregar-tarea"
             > &#43; Nueva Tarea </button>
         </div>
+
+        <ul id="listado-tareas" class="listado-tareas">
+            <!-- Tareas dinamicas -->
+            
+        </ul>
+
     </div>
 
 
@@ -15,5 +21,4 @@
 
 <?php $script = '
     <script src="build/js/tareas.js"></script>
-    <script src="build/js/app.js"></script>
 '; ?>

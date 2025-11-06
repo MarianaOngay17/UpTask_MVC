@@ -28,7 +28,7 @@
             text-transform: uppercase;
 
             &:hover, &.activo{
-                background-color: color.adjust(v.$indigo, $lightness: -20%);;
+                background-color: color.adjust(v.$indigo, $lightness: -20%);
                 border-radius: .5rem;
             }
 
