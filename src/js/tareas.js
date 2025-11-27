@@ -210,7 +210,6 @@
                 method: 'POST',
                 body: datos
             })
-
             const resultado = await respuesta.json();
             mostrarAlerta(resultado.mensaje, resultado.tipo, document.querySelector('.formulario legend'));
 

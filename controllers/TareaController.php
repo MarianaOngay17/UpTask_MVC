@@ -27,7 +27,7 @@ class TareaController {
     }
 
     public static function crear() {
-
+         
         if($_SERVER['REQUEST_METHOD'] === 'POST'){
 
             session_start();
@@ -47,16 +47,30 @@ class TareaController {
 
             $tarea = new Tarea($_POST);
             $tarea->proyectoId = $proyecto->id;
+
+            $validar_resultado = $tarea->validar_tarea();
+
+            if(!$validar_resultado){
+                 $respuesta = [
+                    'tipo' => 'error',
+                    'mensaje' => 'El Nombre de la Tarea es Obligatorio',
+                    'id' => 0,
+                    'proyectoId' => $proyecto->id
+                ];
+                echo json_encode($respuesta);
+                return;
+            }
+
             $resultado = $tarea->guardar();
 
             if($resultado){
                 $respuesta = [
-                     'tipo' => 'exito',
-                     'mensaje' => 'Tarea agregada correctamente',
-                     'id' => $resultado['id'],
-                     'proyectoId' => $proyecto->id
+                  'tipo' => 'exito',
+                      'mensaje' => 'Tarea agregada correctamente',
+                      'id' => $resultado['id'],
+                      'proyectoId' => $proyecto->id
                 ];
-             echo json_encode($respuesta);
+                echo json_encode($respuesta);
             }
        
         }

@@ -17,4 +17,11 @@ class Tarea extends ActiveRecord {
         $this->estado = $args['estado'] ?? 0;
         $this->proyectoId = $args['proyectoId'] ?? '';
     }
+
+    public function validar_tarea(){
+        if(!$this->nombre){
+            return false;
+        }
+        return true;
+    }
 }
