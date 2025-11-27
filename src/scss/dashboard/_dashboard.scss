@@ -37,6 +37,13 @@
               font-weight: bold;
               font-size: 1.4rem;
           }
-   }
+     }
+
+     .enlace {
+          color: v.$indigo;
+          &:hover {
+               color: color.adjust(v.$indigo, $lightness: -20%);
+          }
+     }
 
 }
